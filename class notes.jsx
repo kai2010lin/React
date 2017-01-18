@@ -545,3 +545,158 @@ module.exports = {
       var requestURL = `${OPEN_POKEMON_URL}${number}\`
   }//inside of `${}`, everything is regular js
 }
+///
+
+
+handleSearch: function(location){
+    //this.setState({
+    //    location : location,
+    //    name: 'balala'
+    //});
+
+    var that = this;
+    PokemonAPI.getName(location).then(function(name){//getName(return a priomise. 2 consecutive promise calls)
+      alert("3");
+      that.setState({
+        location : location,
+        name: name
+      })
+    }, function(errorMessage){
+      alert(errorMessage);
+      alert("4");
+    });
+  },
+  
+  ///pokemonAPI.jsx
+var React = require('react');
+var axios = require('axios');
+
+const OPEN_POKEMON_URL = 'http://pokeapi.co/api/v2/pokemon/';
+
+module.exports = {
+  getName : function(number){
+      var encodeLocation = encodeURIComponent(number);
+      var requestURL = `${OPEN_POKEMON_URL}${number}/`;
+
+      return axios.get(requestURL).then(function(res){
+        if(res.data.cod && res.data.message){
+          throw new Error(res.data.message);
+        }
+        else{
+          alert("1");
+          return res.data.name; //根据实际的json结构，name选项
+        }
+      }, function(res){
+        alert("2");
+        throw new Error(res.data.message);
+      })
+  }
+}
+
+//debugger;to set 断点
+// use console to see values
+
+
+//es6 features, replace anonymous function with arrow function
+
+var name = ['1', '2', '3'];
+
+name.forEach(function(name){
+  console.log('ForEach', name);
+})
+
+name.forEach((name) => {
+  console.log('arrow', name);
+})
+
+name.forEach((name) => console.log('arrowshorter', name));
+
+var returnME = (name) => name + '!';//()=> works just like a function, return what is in behind
+
+console.log(returnME('Kai'));
+
+//this binding of arrow is its parent, annooyous function's this refer to itself
+
+var ob1 = {
+  FullName: "Kai",
+  Greet:  function (){
+    name.forEach(function(name){
+      console.log(this.FullName + ' says hi to ' + name);
+    })
+  }
+}
+
+ob1.Greet();
+
+var ob2 = {
+  FullName: "Kai",
+  Greet:  function (){
+    name.forEach((name) => {
+      console.log(this.FullName + ' says hi to ' + name);
+    })
+  }
+}
+
+ob2.Greet();
+
+var ob3 = {
+  FullName: "Kai",
+  Greet:  function (){
+    name.forEach((name) => {
+      console.log(this.FullName + ' says hi to ' + name);
+    })
+  }
+}
+
+ob3.Greet.call(ob3);
+
+
+function add (a, b){
+  return a + b;
+}
+console.log(add(1, 3));
+console.log(add(2, 4));
+
+var func1 = (a, b) => {return a + b}
+var func2 = (a, b) => a + b;
+console.log(func1(2,2));
+console.log(func2(4,4));
+
+//stateless functional component
+
+var React = require('react');
+
+var About = React.createClass({
+  render: function () {
+    return (
+      <h3>About Component</h3>
+    )
+  }
+});
+
+var About = (props)=>{
+  return (
+    <h3>About Component</h3>
+  )
+}
+module.exports = About;//replace with function
+
+//if it use this.props => props, use only if no state used and have functions other than render
+
+var WeatherDisplay = React.createClass({
+  render: function () {
+    var {name, location} = this.props;
+
+    return (
+        <h3>{location} is {name}</h3>
+    )
+  }
+});
+
+var WeatherDisplay = ({name, location}) => {
+  return (
+      <h3>{location} is {name}</h3>
+  )
+}
+
+  
